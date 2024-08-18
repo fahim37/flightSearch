@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import Logo from "./assets/companylogo.webp";
+import FlightSearchForm from "./FlightSearchForm";
+import LocationField from "./components/LocationField";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div>
+      <AppBar position="static" color="default" elevation={0}>
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          <Box component="img" sx={{ height: "55px" }} src={Logo} alt="Logo" />
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{
+              borderRadius: "25px",
+              fontSize: "12px",
+              padding: "8px 20px",
+              cursor: "pointer",
+              width: "fit-content",
+            }}
+          >
+            Login / Sign Up
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <FlightSearchForm />
     </div>
   );
 }
