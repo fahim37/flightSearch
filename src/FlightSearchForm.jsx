@@ -440,6 +440,14 @@ const FlightSearchForm = () => {
               >
                 Search For Flight
               </Button>
+              {selectedTab === 2 && (
+                <Button
+                  variant="contained"
+                  sx={{ color: "white", width: "94%", m: "10px" }}
+                >
+                  Add City
+                </Button>
+              )}
             </Box>
           </Box>
         </Box>
