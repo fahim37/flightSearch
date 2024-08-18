@@ -9,12 +9,14 @@ import {
   Radio,
   Typography,
   Button,
+  IconButton,
 } from "@mui/material";
 import React, { useState } from "react";
 import bg from "./assets/bg.webp";
 import LocationField from "./components/LocationField";
 import FlightIcon from "@mui/icons-material/Flight";
 import FlightOutlinedIcon from "@mui/icons-material/FlightOutlined";
+import CloseIcon from "@mui/icons-material/Close";
 import { airportData } from "./airportData";
 
 const FlightSearchForm = () => {
@@ -25,9 +27,9 @@ const FlightSearchForm = () => {
     seatClass: "economy",
   });
 
-  const [fromLocation, setFromLocation] = useState("DAC");
-  const [toLocation, setToLocation] = useState("CXB");
-  console.log(fromLocation);
+  // State to handle both single and multi-city selections
+  const [locations, setLocations] = useState([{ from: "DAC", to: "CXB" }]);
+
   const [selectedTab, setSelectedTab] = useState(0);
 
   const handleChange = (event) => {
@@ -36,10 +38,29 @@ const FlightSearchForm = () => {
       ...prevValues,
       [name]: value,
     }));
-    console.log(seatDetails);
   };
+
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
+    if (newValue !== 2) {
+      // Reset to single pair if not on multi-city
+      setLocations([{ from: "DAC", to: "CXB" }]);
+    }
+  };
+
+  const handleLocationChange = (index, key, value) => {
+    const updatedLocations = [...locations];
+    updatedLocations[index][key] = value;
+    setLocations(updatedLocations);
+  };
+
+  const addCity = () => {
+    setLocations([...locations, { from: "", to: "" }]);
+  };
+
+  const removeCity = (index) => {
+    const updatedLocations = locations.filter((_, i) => i !== index);
+    setLocations(updatedLocations);
   };
 
   return (
@@ -153,7 +174,7 @@ const FlightSearchForm = () => {
             </Tabs>
           </Box>
           {/* ------------------------ */}
-          {selectedTab === 0 && (
+          {(selectedTab === 0 || selectedTab === 1) && (
             <Box>
               <Grid container spacing={2}>
                 <Grid item md={4}>
@@ -161,8 +182,8 @@ const FlightSearchForm = () => {
                     label={"FROM"}
                     airportData={airportData}
                     showDate={true}
-                    value={fromLocation}
-                    onChange={setFromLocation}
+                    value={locations[0].from}
+                    onChange={(value) => handleLocationChange(0, "from", value)}
                   />
                 </Grid>
                 <Grid item xs={12} md={4} sx={{ position: "relative" }}>
@@ -183,73 +204,31 @@ const FlightSearchForm = () => {
                         userSelect: "none",
                       }}
                     />
-                    <FlightOutlinedIcon
-                      sx={{
-                        width: "1em",
-                        height: "1em",
-                        display: { xs: "none", sm: "inline-block" }, // Hide on extra small and small screens
-                        flexShrink: 0,
-                        fontSize: "100px",
-                        position: "absolute",
-                        bottom: "20px",
-                        right: "25%",
-                        transform: "rotate(-90deg)",
-                        color: "primary.main",
-                      }}
-                    />
+                    {selectedTab === 0 && (
+                      <FlightOutlinedIcon
+                        sx={{
+                          width: "1em",
+                          height: "1em",
+                          display: { xs: "none", sm: "inline-block" }, // Hide on extra small and small screens
+                          flexShrink: 0,
+                          fontSize: "100px",
+                          position: "absolute",
+                          bottom: "20px",
+                          right: "25%",
+                          transform: "rotate(-90deg)",
+                          color: "primary.main",
+                        }}
+                      />
+                    )}
                   </Box>
                 </Grid>
                 <Grid item md={4}>
                   <LocationField
                     label={"TO"}
                     airportData={airportData}
-                    showDate={true}
-                    value={toLocation}
-                    onChange={setToLocation}
-                  />
-                </Grid>
-              </Grid>
-            </Box>
-          )}
-          {selectedTab === 1 && (
-            <Box>
-              <Grid container spacing={2}>
-                <Grid item md={4}>
-                  <LocationField
-                    label={"FROM"}
-                    airportData={airportData}
-                    showDate={true}
-                    value={fromLocation}
-                    onChange={setFromLocation}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4} sx={{ position: "relative" }}>
-                  <Box sx={{ position: "relative", height: "100%" }}>
-                    <FlightIcon
-                      sx={{
-                        width: "1em",
-                        height: "1em",
-                        display: { xs: "none", sm: "inline-block" }, // Hide on extra small and small screens
-                        fill: "currentcolor",
-                        flexShrink: 0,
-                        fontSize: "100px",
-                        position: "absolute",
-                        top: 0,
-                        left: "20%",
-                        transform: "rotate(90deg)",
-                        color: "primary.main",
-                        userSelect: "none",
-                      }}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item md={4}>
-                  <LocationField
-                    label={"TO"}
-                    airportData={airportData}
-                    showDate={false}
-                    value={toLocation}
-                    onChange={setToLocation}
+                    showDate={selectedTab === 0}
+                    value={locations[0].to}
+                    onChange={(value) => handleLocationChange(0, "to", value)}
                   />
                 </Grid>
               </Grid>
@@ -257,86 +236,72 @@ const FlightSearchForm = () => {
           )}
           {selectedTab === 2 && (
             <Box>
-              <Grid container spacing={2}>
-                <Grid item md={4}>
-                  <LocationField
-                    label={"FROM"}
-                    airportData={airportData}
-                    showDate={false}
-                    value={fromLocation}
-                    onChange={setFromLocation}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4} sx={{ position: "relative" }}>
-                  <Box sx={{ position: "relative", height: "100%" }}>
-                    <FlightIcon
-                      sx={{
-                        width: "1em",
-                        height: "1em",
-                        display: { xs: "none", sm: "inline-block" }, // Hide on extra small and small screens
-                        fill: "currentcolor",
-                        flexShrink: 0,
-                        fontSize: "100px",
-                        position: "absolute",
-                        top: 0,
-                        left: "20%",
-                        transform: "rotate(90deg)",
-                        color: "primary.main",
-                        userSelect: "none",
-                      }}
+              {locations.map((location, index) => (
+                <Grid container spacing={2} key={index}>
+                  <Grid item md={4}>
+                    <LocationField
+                      label={"FROM"}
+                      airportData={airportData}
+                      showDate={false}
+                      value={location.from}
+                      onChange={(value) =>
+                        handleLocationChange(index, "from", value)
+                      }
                     />
-                  </Box>
-                </Grid>
-                <Grid item md={4}>
-                  <LocationField
-                    label={"TO"}
-                    airportData={airportData}
-                    showDate={true}
-                    value={toLocation}
-                    onChange={setToLocation}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container spacing={2}>
-                <Grid item md={4}>
-                  <LocationField
-                    label={"FROM"}
-                    airportData={airportData}
-                    showDate={false}
-                    value={fromLocation}
-                    onChange={setFromLocation}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4} sx={{ position: "relative" }}>
-                  <Box sx={{ position: "relative", height: "100%" }}>
-                    <FlightIcon
-                      sx={{
-                        width: "1em",
-                        height: "1em",
-                        display: { xs: "none", sm: "inline-block" }, // Hide on extra small and small screens
-                        fill: "currentcolor",
-                        flexShrink: 0,
-                        fontSize: "100px",
-                        position: "absolute",
-                        top: 0,
-                        left: "20%",
-                        transform: "rotate(90deg)",
-                        color: "primary.main",
-                        userSelect: "none",
-                      }}
+                  </Grid>
+                  <Grid item xs={12} md={4} sx={{ position: "relative" }}>
+                    <Box sx={{ position: "relative", height: "100%" }}>
+                      <FlightIcon
+                        sx={{
+                          width: "1em",
+                          height: "1em",
+                          display: {
+                            xs: "none",
+                            sm: "inline-block",
+                          }, // Hide on extra small and small screens
+                          fill: "currentcolor",
+                          flexShrink: 0,
+                          fontSize: "100px",
+                          position: "absolute",
+                          top: 0,
+                          left: "20%",
+                          transform: "rotate(90deg)",
+                          color: "primary.main",
+                          userSelect: "none",
+                        }}
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid
+                    item
+                    md={4}
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <LocationField
+                      label={"TO"}
+                      airportData={airportData}
+                      showDate={true}
+                      value={location.to}
+                      onChange={(value) =>
+                        handleLocationChange(index, "to", value)
+                      }
                     />
-                  </Box>
+                    <IconButton
+                      onClick={() => removeCity(index)}
+                      sx={{
+                        color: "error.main",
+                        ml: 1,
+                        alignSelf: "center",
+                        "&:hover": {
+                          backgroundColor: "rgba(255, 0, 0, 0.1)",
+                        },
+                      }}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  </Grid>
                 </Grid>
-                <Grid item md={4}>
-                  <LocationField
-                    label={"TO"}
-                    airportData={airportData}
-                    showDate={true}
-                    value={toLocation}
-                    onChange={setToLocation}
-                  />
-                </Grid>
-              </Grid>
+              ))}
             </Box>
           )}
         </Box>
@@ -444,6 +409,7 @@ const FlightSearchForm = () => {
                 <Button
                   variant="contained"
                   sx={{ color: "white", width: "94%", m: "10px" }}
+                  onClick={addCity}
                 >
                   Add City
                 </Button>
