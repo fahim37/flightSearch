@@ -86,8 +86,8 @@ const FlightSearchForm = () => {
           display: "flex",
           width: "100%",
           height: "auto",
-          flexFlow: "wrap",
           mt: "5%",
+          flexDirection: { xs: "column", sm: "row" },
         }}
       >
         {/* left search box */}
@@ -98,7 +98,6 @@ const FlightSearchForm = () => {
             p: "20px",
             borderRadius: "10px",
             flexBasis: "70.8333%",
-            maxWidth: "70.8333%",
           }}
         >
           <Box sx={{ display: "flex", justifyContent: "start" }}>
@@ -192,7 +191,7 @@ const FlightSearchForm = () => {
                       sx={{
                         width: "1em",
                         height: "1em",
-                        display: { xs: "none", sm: "inline-block" }, // Hide on extra small and small screens
+                        display: { xs: "none", sm: "none", md: "inline-block" },
                         fill: "currentcolor",
                         flexShrink: 0,
                         fontSize: "100px",
@@ -209,7 +208,11 @@ const FlightSearchForm = () => {
                         sx={{
                           width: "1em",
                           height: "1em",
-                          display: { xs: "none", sm: "inline-block" }, // Hide on extra small and small screens
+                          display: {
+                            xs: "none",
+                            sm: "none",
+                            md: "inline-block",
+                          },
                           flexShrink: 0,
                           fontSize: "100px",
                           position: "absolute",
@@ -258,7 +261,7 @@ const FlightSearchForm = () => {
                           display: {
                             xs: "none",
                             sm: "inline-block",
-                          }, // Hide on extra small and small screens
+                          },
                           fill: "currentcolor",
                           flexShrink: 0,
                           fontSize: "100px",
@@ -310,7 +313,6 @@ const FlightSearchForm = () => {
           sx={{
             borderRadius: "10px",
             flexBasis: "29.1667%",
-            maxWidth: "29.1667%",
             bgcolor: "#FFFFFF",
             borderTop: {
               xs: "2px dotted #D7E7F4",
@@ -327,8 +329,8 @@ const FlightSearchForm = () => {
             sx={{
               display: "flex",
               flexDirection: "column",
-              justifyContent: "space-between", // Spacing along the main axis
-              height: "100%", // Ensure the container fills its parent to use space effectively
+              justifyContent: "space-between",
+              height: "100%",
             }}
           >
             <Box>
